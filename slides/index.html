@@ -1,0 +1,2809 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<title>Introduction to Moose</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<!-- metadata -->
+<meta name="generator" content="S5" />
+<meta name="version" content="S5 1.2a2" />
+<meta name="author" content="Eric A. Meyer" />
+<meta name="company" content="Complex Spiral Consulting" />
+<!-- configuration parameters -->
+<meta name="defaultView" content="slideshow" />
+<meta name="controlVis" content="hidden" />
+<!-- style sheet links -->
+<link rel="stylesheet" href="ui/default/slides.css" type="text/css" media="projection" id="slideProj" />
+<link rel="stylesheet" href="ui/default/outline.css" type="text/css" media="screen" id="outlineStyle" />
+<link rel="stylesheet" href="ui/default/print.css" type="text/css" media="print" id="slidePrint" />
+<link rel="stylesheet" href="ui/default/opera.css" type="text/css" media="projection" id="operaFix" />
+<!-- embedded styles -->
+<style type="text/css" media="all">
+.imgcon {width: 525px; margin: 0 auto; padding: 0; text-align: center;}
+#anim {width: 270px; height: 320px; position: relative; margin-top: 0.5em;}
+#anim img {position: absolute; top: 42px; left: 24px;}
+img#me01 {top: 0; left: 0;}
+img#me02 {left: 23px;}
+img#me04 {top: 44px;}
+img#me05 {top: 43px;left: 36px;}
+</style>
+<!-- S5 JS -->
+<script src="ui/default/slides.js" type="text/javascript"></script>
+<link rel="stylesheet" href="ui/custom.css" type="text/css" />
+</head>
+<body>
+
+<div class="layout">
+<div id="controls"><!-- DO NOT EDIT --></div>
+<div id="currentSlide"><!-- DO NOT EDIT --></div>
+<div id="header"></div>
+<div id="footer">
+  <div id="license">
+    <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/us/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-sa/3.0/us/88x31.png" /></a>
+    <br /><span xmlns:dc="http://purl.org/dc/elements/1.1/" href="http://purl.org/dc/dcmitype/Text" property="dc:title" rel="dc:type">Introduction to Moose</span> by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">David Rolsky</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/us/">Creative Commons Attribution-Share Alike 3.0 United States License</a>.
+  </div>
+
+  <h2>Introduction to Moose</h2>
+</div>
+</div>
+
+<div class="presentation">
+
+<div class="slide">
+  <h1>Introduction to Moose</h1>
+  <h2>YAPC 2009</h2>
+</div>
+
+<div class="slide">
+  <h1>Moose Summed Up</h1>
+
+  <ul>
+    <li><strong>Declarative</strong> OO sugar</li>
+    <li>Introspectable</li>
+    <li>Extensible (MooseX::* on CPAN)</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Moose Background</h1>
+
+  <ul>
+    <li>Created by Stevan Little, first released in 2006</li>
+    <li>Moose builds on Perl 5's native OO</li>
+    <li>Borrows ideas from other languages, notably Perl 6</li>
+    <li>Provides semantics for common operations</li>
+  </ul>
+</div>
+
+<div class="slide fake-slide0">
+  <h1>Part 0: Moose Concepts</h1>
+</div>
+
+<div class="slide">
+  <h1>Classes</h1>
+
+  <ul>
+    <li>
+      Classes have ...
+      <ul>
+        <li>Attributes</li>
+        <li>Methods</li>
+        <li>Superclasses</li>
+        <li>Method modifiers</li>
+        <li>Constructor and destructor</li>
+        <li>One metaclass object</li>
+      </ul>
+    </li>
+    <li>Classes do roles</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Class Example</h1>
+
+  <pre><code>package Person;
+<span class="highlight">use Moose;</span></code></pre>
+
+  <ul>
+    <li>Poof, a Moose-based class!</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Attributes</h1>
+
+  <ul>
+    <li>Aka property, slot, field, member variable</li>
+    <li>A piece of data owned by an object</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Attributes</h1>
+
+  <ul>
+    <li>
+      Attributes have ...
+      <ul>
+        <li>Access-control (read-only vs read-write)</li>
+        <li>An optional type</li>
+        <li>Accessor methods</li>
+        <li>Delegation methods</li>
+        <li>Optional default value</li>
+        <li>Many more features</li>
+      </ul>
+    </li>
+    <li>Stored in the object, but don't worry about that</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Attribute Example</h1>
+
+  <pre><code>package Person;
+use Moose;
+
+<span class="highlight">has first_name =&gt; ( is =&gt; 'rw' );</span></code></pre>
+
+</div>
+
+<div class="slide">
+  <h1>Methods</h1>
+
+  <ul>
+    <li>Nothing fancy here, just Perl subroutines</li>
+  </ul>
+
+  <pre><code>package Person;
+use Moose;
+
+<span class="highlight">sub greet { ... }</span></code></pre>
+</div>
+
+<div class="slide">
+  <h1>Roles</h1>
+
+  <ul>
+    <li>Classes <strong>do</strong> (or consume) roles</li>
+    <li>Similar to mixins and Java interfaces</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Roles</h1>
+
+  <ul>
+    <li>Like classes, can have attributes, methods, do roles</li>
+    <li>Roles can require methods</li>
+    <li>Roles are composed (flattened) into classes</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Role Example</h1>
+
+<pre><code>package HasPermissions;
+<span class="highlight">use Moose::Role;</span>
+
+has is_admin =&gt; ( is =&gt; 'rw' );</code></pre>
+</div>
+
+<div class="slide">
+  <h1>Role Example</h1>
+
+  <p>
+    And then ...
+  </p>
+  
+<pre><code>package Person;
+use Moose;
+
+<span class="highlight">with 'HasPermissions';</span></code></pre>
+</div>
+
+<div class="slide">
+  <h1>Method Modifiers</h1>
+
+  <ul>
+    <li>AKA advice</li>
+    <li>&quot;<strong>Before</strong> foo(), do this first&quot;</li>
+    <li>&quot;Do this <strong>after</strong> foo()</li>
+    <li>&quot;Put this code <strong>around</strong> foo()&quot;</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Before and After</h1>
+
+<pre><code>before 'foo'
+    =&gt; sub { warn 'About to call foo()' };
+
+after  'foo'
+    =&gt; sub { warn 'Leaving foo()' };</code></pre>
+
+</div>
+
+<div class="slide">
+  <h1>Around</h1>
+
+<pre><code>around 'foo' =&gt; sub {
+    my $real_foo = shift;
+    my $self     = shift;
+
+    warn 'Just before foo()';
+    my @return =
+        $self-&gt;$real_foo( @_, bar =&gt; 42 );
+
+    return ( @return, 'modify return values' );
+};</code></pre>
+</div>
+
+<div class="slide">
+  <h1>Type Constraints</h1>
+
+  <ul>
+    <li>NOT A FULL-BLOWN TYPE SYSTEM!</li>
+    <li>But still darn useful</li>
+    <li>Constrain attribute values</li>
+    <li>Coerce from other types</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Type Constraint Example</h1>
+
+<pre><code>package Person;
+use Moose;
+
+has weight =&gt; (
+    is  =&gt; 'ro',
+    <span class="highlight">isa =&gt; 'Int'</span>,
+);
+
+# kaboom
+Person-&gt;new( weight =&gt; 'fat' );</code></pre>
+</div>
+
+<div class="slide">
+  <h1>Delegation</h1>
+
+  <ul>
+    <li>Attributes can define delegations</li>
+    <li>Lets you hide some implementation details</li>
+    <li>Fewer objects to chase around</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Delegation</h1>
+
+<pre><code>package Person;
+use Moose;
+
+has blog_uri =&gt; (
+    is      =&gt; 'rw',
+    isa     =&gt; 'URI',
+    <span class="highlight">handles =&gt; { 'blog_hostname' =&gt; 'host' },</span>
+);
+
+<span class="highlight">$person->blog_hostname;</span>
+# really calls $person->blog_uri->host</code></pre>
+</div>
+
+<div class="slide">
+  <h1>Constructors</h1>
+
+  <ul>
+    <li>Moose creates <code>new()</code> for you</li>
+    <li>Provide an optional <code>BUILDARGS()</code> and <code>BUILD()</code></li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Destructors</h1>
+
+  <ul>
+    <li>Provide an optional <code>DEMOLISH()</code></li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Moose Meta-API</h1>
+
+  <ul>
+    <li>Answers questions like ...
+      <ul>
+        <li>What methods does this class have?</li>
+        <li>What are its parents?</li>
+        <li>What attributes does it have (including inherited attributes)?</li>
+        <li>What roles does it do?</li>
+        <li>Much, much, more</li>
+      </ul>
+    </li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Moose Meta-API</h1>
+
+  <ul>
+    <li>Not just for introspection ...
+      <ul>
+        <li>Add methods, attributes, roles, etc</li>
+        <li>Extend and alter core features</li>
+      </ul>
+    </li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Why Moose?</h1>
+
+  <ul>
+    <li>A quick bit of propoganda ...</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>With Moose</h1>
+
+  <pre><code>package Person;
+use Moose;
+
+has last_name =&gt; (
+    is  =&gt; 'rw',
+    isa =&gt; 'Str',
+);</code></pre>
+</div>
+
+<div class="slide">
+    <h1>Without Moose</h1>
+
+    <pre class="small"><code>package Person;
+use strict;
+use warnings;
+use Carp 'confess';
+
+sub new {
+    my $class = shift;
+    my %args  = @_;
+    my $self  = {};
+
+    if (exists $args{last_name}) {
+        confess &quot;Attribute (last_name) does not pass the type constraint because: &quot;
+                . &quot;Validation failed for 'Str' with value $args{last_name}&quot;
+            if ref($args{last_name});
+        $self-&gt;{last_nane} = $args{last_name};
+    }
+
+    return bless $self, $class;
+}
+
+sub last_name {
+    my $self = shift;
+
+    if (@_) {
+        my $value = shift;
+        confess &quot;Attribute (last_name) does not pass the type constraint because: &quot;
+                . &quot;Validation failed for 'Str' with value $value&quot;
+            if ref($value);
+        $self-&gt;{last_name} = $value;
+    }
+
+    return $self-&gt;{last_name};
+}</code></pre>
+
+</div>
+
+<div class="slide">
+    <h1>Side by side</h1>
+
+    <table class="side-by-side">
+        <tr>
+          <td>
+            <pre><code>package Person;
+use Moose;
+
+has last_name =&gt; (
+    is  =&gt; 'rw',
+    isa =&gt; 'Str',
+);</code></pre>
+            </td>
+            <td>
+                <pre class="small"><code>package Person;
+use strict;
+use warnings;
+use Carp 'confess';
+
+sub new {
+    my $class = shift;
+    my %args  = @_;
+    my $self  = {};
+
+    if (exists $args{last_name}) {
+        confess &quot;Attribute (last_name) does not pass the type constraint because: &quot;
+                . &quot;Validation failed for 'Str' with value $args{last_name}&quot;
+            if ref($args{last_name});
+        $self-&gt;{last_nane} = $args{last_name};
+    }
+
+    return bless $self, $class;
+}
+
+sub last_name {
+    my $self = shift;
+
+    if (@_) {
+        my $value = shift;
+        confess &quot;Attribute (last_name) does not pass the type constraint because: &quot;
+                . &quot;Validation failed for 'Str' with value $value&quot;
+            if ref($value);
+        $self-&gt;{last_name} = $value;
+    }
+
+    return $self-&gt;{last_name};
+}</code></pre>
+            </td>
+        </tr>
+    </table>
+
+</div>
+
+<div class="slide">
+    <h1>Side by side</h1>
+
+    <table class="side-by-side">
+        <tr>
+            <td>
+                <pre><code><span class="match-moose">package Person;</span>
+use Moose;
+
+has last_name =&gt; (
+    is  =&gt; 'rw',
+    isa =&gt; 'Str',
+);</code></pre>
+            </td>
+            <td>
+                <pre class="small"><code><span class="match-unsweet">package Person;</span>
+use strict;
+use warnings;
+use Carp 'confess';
+
+sub new {
+    my $class = shift;
+    my %args  = @_;
+    my $self  = {};
+
+    if (exists $args{last_name}) {
+        confess &quot;Attribute (last_name) does not pass the type constraint because: &quot;
+                . &quot;Validation failed for 'Str' with value $args{last_name}&quot;
+            if ref($args{last_name});
+        $self-&gt;{last_nane} = $args{last_name};
+    }
+
+    return bless $self, $class;
+}
+
+sub last_name {
+    my $self = shift;
+
+    if (@_) {
+        my $value = shift;
+        confess &quot;Attribute (last_name) does not pass the type constraint because: &quot;
+                . &quot;Validation failed for 'Str' with value $value&quot;
+            if ref($value);
+        $self-&gt;{last_name} = $value;
+    }
+
+    return $self-&gt;{last_name};
+}</code></pre>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div class="slide">
+    <h1>Side by side</h1>
+
+    <table class="side-by-side">
+        <tr>
+            <td>
+                <pre><code>package Person;
+<span class="match-moose">use Moose;</span>
+
+has last_name =&gt; (
+    is  =&gt; 'rw',
+    isa =&gt; 'Str',
+);</code></pre>
+            </td>
+            <td>
+                <pre class="small"><code>package Person;
+<span class="match-unsweet">use strict;
+use warnings;
+use Carp 'confess';
+
+sub new {
+    my $class = shift;
+    my %args  = @_;
+    my $self  = {};</span>
+
+    if (exists $args{last_name}) {
+        confess &quot;Attribute (last_name) does not pass the type constraint because: &quot;
+                . &quot;Validation failed for 'Str' with value $args{last_name}&quot;
+            if ref($args{last_name});
+        $self-&gt;{last_nane} = $args{last_name};
+    }
+
+    <span class="match-unsweet">return bless $self, $class;
+}</span>
+
+sub last_name {
+    my $self = shift;
+
+    if (@_) {
+        my $value = shift;
+        confess &quot;Attribute (last_name) does not pass the type constraint because: &quot;
+                . &quot;Validation failed for 'Str' with value $value&quot;
+            if ref($value);
+        $self-&gt;{last_name} = $value;
+    }
+
+    return $self-&gt;{last_name};
+}</code></pre>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div class="slide">
+    <h1>Side by side</h1>
+
+    <table class="side-by-side">
+        <tr>
+            <td>
+                <pre><code>package Person;
+use Moose;
+
+<span class="match-moose">has last_name =&gt; (</span>
+    is  =&gt; 'rw',
+    isa =&gt; 'Str',
+<span class="match-moose">);</span></code></pre>
+            </td>
+            <td>
+                <pre class="small"><code>package Person;
+use strict;
+use warnings;
+use Carp 'confess';
+
+sub new {
+    my $class = shift;
+    my %args  = @_;
+    my $self  = {};
+
+    <span class="match-unsweet">if (exists $args{last_name}) {</span>
+        confess &quot;Attribute (last_name) does not pass the type constraint because: &quot;
+                . &quot;Validation failed for 'Str' with value $args{last_name}&quot;
+            if ref($args{last_name});
+        <span class="match-unsweet">$self-&gt;{last_nane} = $args{last_name};
+    }</span>
+
+    return bless $self, $class;
+}
+
+sub last_name {
+    my $self = shift;
+
+    if (@_) {
+        my $value = shift;
+        confess &quot;Attribute (last_name) does not pass the type constraint because: &quot;
+                . &quot;Validation failed for 'Str' with value $value&quot;
+            if ref($value);
+        $self-&gt;{last_name} = $value;
+    }
+
+    return $self-&gt;{last_name};
+}</code></pre>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div class="slide">
+    <h1>Side by side</h1>
+
+    <table class="side-by-side">
+        <tr>
+            <td>
+                <pre><code>package Person;
+use Moose;
+
+has last_name =&gt; (
+    <span class="match-moose">is  =&gt; 'rw',</span>
+    isa =&gt; 'Str',
+);</code></pre>
+            </td>
+            <td>
+                <pre class="small"><code>package Person;
+use strict;
+use warnings;
+use Carp 'confess';
+
+sub new {
+    my $class = shift;
+    my %args  = @_;
+    my $self  = {};
+
+    if (exists $args{last_name}) {
+        confess &quot;Attribute (last_name) does not pass the type constraint because: &quot;
+                . &quot;Validation failed for 'Str' with value $args{last_name}&quot;
+            if ref($args{last_name});
+        $self-&gt;{last_nane} = $args{last_name};
+    }
+
+    return bless $self, $class;
+}
+
+<span class="match-unsweet">sub last_name {
+    my $self = shift;
+
+    if (@_) {
+        my $value = shift;</span>
+        confess &quot;Attribute (last_name) does not pass the type constraint because: &quot;
+                . &quot;Validation failed for 'Str' with value $value&quot;
+            if ref($value);
+        <span class="match-unsweet">$self-&gt;{last_name} = $value;
+    }
+
+    return $self-&gt;{last_name};
+}</span></code></pre>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div class="slide">
+    <h1>Side by side</h1>
+
+    <table class="side-by-side">
+        <tr>
+            <td>
+                <pre><code>package Person;
+use Moose;
+
+has last_name =&gt; (
+    is  =&gt; 'rw',
+    <span class="match-moose">isa =&gt; 'Str',</span>
+);</code></pre>
+            </td>
+            <td>
+                <pre class="small"><code>package Person;
+use strict;
+use warnings;
+use Carp 'confess';
+
+sub new {
+    my $class = shift;
+    my %args  = @_;
+    my $self  = {};
+
+    if (exists $args{last_name}) {
+        <span class="match-unsweet">confess &quot;Attribute (last_name) does not pass the type constraint because: &quot;
+                . &quot;Validation failed for 'Str' with value $args{last_name}&quot;
+            if ref($args{last_name});</span>
+        $self-&gt;{last_nane} = $args{last_name};
+    }
+
+    return bless $self, $class;
+}
+
+sub last_name {
+    my $self = shift;
+
+    if (@_) {
+        my $value = shift;
+        <span class="match-unsweet">confess &quot;Attribute (last_name) does not pass the type constraint because: &quot;
+                . &quot;Validation failed for 'Str' with value $value&quot;
+            if ref($value);</span>
+        $self-&gt;{last_name} = $value;
+    }
+
+    return $self-&gt;{last_name};
+}</code></pre>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div class="slide">
+    <h1>Side by side</h1>
+
+    <table class="side-by-side">
+        <tr class="incremental">
+            <td>5 lines</td>
+            <td>21 lines</td>
+        </tr>
+        <tr class="incremental">
+            <td>92 characters</td>
+            <td>741 characters</td>
+        </tr>
+        <tr>
+            <td>
+                <pre><code>package Person;
+use Moose;
+
+has last_name =&gt; (
+    is  =&gt; 'rw',
+    isa =&gt; 'Str',
+);</code></pre>
+            </td>
+            <td>
+                <pre class="small"><code>package Person;
+use strict;
+use warnings;
+use Carp 'confess';
+
+sub new {
+    my $class = shift;
+    my %args  = @_;
+    my $self  = {};
+
+    if (exists $args{last_name}) {
+        confess &quot;Attribute (last_name) does not pass the type constraint because: &quot;
+                . &quot;Validation failed for 'Str' with value $args{last_name}&quot;
+            if ref($args{last_name});
+        $self-&gt;{last_nane} = $args{last_name};
+    }
+
+    return bless $self, $class;
+}
+
+sub last_name {
+    my $self = shift;
+
+    if (@_) {
+        my $value = shift;
+        confess &quot;Attribute (last_name) does not pass the type constraint because: &quot;
+                . &quot;Validation failed for 'Str' with value $value&quot;
+            if ref($value);
+        $self-&gt;{last_name} = $value;
+    }
+
+    return $self-&gt;{last_name};
+}</code></pre>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div class="slide">
+    <h1>Typo?</h1>
+
+    <pre class="small"><code>sub new {
+    my $class = shift;
+    my %args  = @_;
+    my $self  = {};
+
+    if (exists $args{last_name}) {
+        confess &quot;Attribute (last_name) does not pass the type constraint because: &quot;
+                . &quot;Validation failed for 'Str' with value $args{last_name}&quot;
+            if ref($args{last_name});
+        $self-&gt;{last_nane} = $args{last_name};
+    }
+
+    return bless $self, $class;
+}</code></pre>
+</div>
+
+<div class="slide">
+    <h1>Typo?</h1>
+
+    <pre class="small"><code>if (exists $args{last_name}) {
+    confess &quot;Attribute (last_name) does not pass the type constraint because: &quot;
+            . &quot;Validation failed for 'Str' with value $args{last_name}&quot;
+        if ref($args{last_name});
+    $self-&gt;{last_nane} = $args{last_name};
+}</code></pre>
+</div>
+
+<div class="slide">
+    <h1>Typo?</h1>
+
+    <code>$self-&gt;{last_nane} = $args{last_name};</code>
+</div>
+
+<div class="slide">
+    <h1>Typo?</h1>
+    <code>$self-&gt;{last_na<span class="wrong">n</span>e}</code>
+</div>
+
+<div class="slide">
+    <h1>Why Moose?</h1>
+
+    <pre><code>package Person;
+use Moose;
+
+has last_name =&gt; (
+    is  =&gt; 'rw',
+    isa =&gt; 'Str',
+);</code></pre>
+</div>
+
+<div class="slide fake-slide0">
+  <h1>Part 1: Moose Classes</h1>
+</div>
+
+<div class="slide">
+  <h1>Moose Classes</h1>
+
+  <ul>
+    <li>Moose classes are Perl packages which <code>use Moose</code></li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Moose.pm and Your Class</h1>
+
+  <pre><code>package Person;
+use Moose;</code></pre>
+
+  <ul>
+    <li><code>Moose.pm</code> provides declarative sugar</li>
+    <li>Turns on <code>strict</code> and <code>warnings</code></li>
+    <li>Creates metaclasses for your class: <code>Person-&gt;meta</code></li>
+    <li>Moose classes automatically inherit from <code>Moose::Object</code></li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>What <code>Moose::Object</code> Provides</h1>
+
+  <ul>
+    <li>Constructor - <code>new()</code></li>
+    <li>Calls your <code>BUILDARGS()</code> and/or <code>BUILD()</code></li>
+    <li>Calls your <code>DEMOLISH</code> during object destruction</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>extends</h1>
+
+  <ul>
+    <li><code>extends</code> is sugar for declaring parent classes</li>
+  </ul>
+
+  <pre><code>package Employee;
+use Moose;
+<span class="highlight">extends 'Person';</span></code></pre>
+</div>
+
+<div class="slide">
+  <h1>extends</h1>
+
+  <ul>
+    <li>Each call to <code>extends</code> <strong>resets</strong> your parents</li>
+  </ul>
+
+  <h2 class="wrong">Wrong</h2>
+
+  <pre><code>package EvilEmployee;
+use Moose;
+extends 'Person';
+extends 'Thief';</code></pre>
+
+  <h2 class="right">Right</h2>
+
+  <pre><code>package EvilEmployee;
+use Moose;
+extends 'Person', 'Thief';</code></pre>
+</div>
+
+<div class="slide">
+  <h1>Extending un-Moose-y Parents</h1>
+
+  <pre><code>package My::LWP;
+use Moose;
+extends 'LWP';</code></pre>
+
+  <ul>
+    <li>No <code>Moose::Object</code>, so ...
+      <ul>
+        <li>No attribute-handling <code>new()</code></li>
+        <li>No <code>BUILDARGS()</code> or <code>BUILD()</code></li>
+        <li>No <code>DEMOLISH()</code></li>
+      </ul>
+    </li>
+    <li>But see <code>MooseX::NonMoose</code> for a workaround</li>
+  </ul>
+</div>  
+
+<div class="slide">
+  <h1><code>overrides</code> and <code>super</code></h1>
+
+  <ul>
+    <li><code>overrides</code> is another method modifier</li>
+    <li>An alternative to Perl's <code>SUPER::</code></li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1><code>overrides</code> and <code>super</code></h1>
+
+  <pre><code>package Employee;
+use Moose;
+
+<span class="current incremental">extends 'Person';</span>
+
+<span class="incremental">overrides</span> work =&gt; sub {
+    my $self = shift;
+
+    die "Pay me first" unless $self-&gt;got_paid;
+    <span class="incremental">super();</span>
+}<span class="incremental">;</span></code></pre>
+</div>
+
+<div class="slide">
+  <h1>Caveat <code>super</code></h1>
+
+  <ul>
+    <li>Mostly like <code>$self-&gt;SUPER::work(@_)</code></li>
+    <li><strong>But</strong> cannot change <code>@_</code>!</li>
+    <li>Binds the parent's method at compile time</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Attributes (Part 1)</h1>
+
+  <ul>
+    <li><code>has 'foo'</code></li>
+    <li>Use <code>is =&gt; 'ro'</code> or <code>is =&gt; 'rw'</code></li>
+    <li>Attributes without "is" have no accessors</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Read-write attributes</h1>
+
+  <pre><code>package Person;
+use Moose;
+
+has first_name =&gt; ( <span class="highlight">is =&gt; 'rw'</span> );
+
+my $person =
+    Person-&gt;new( first_name =&gt; 'Dave' );
+
+$person-&gt;first_name('Stevan');
+print $person-&gt;first_name; # Stevan</code></pre>
+
+</div>
+
+<div class="slide">
+  <h1>Read-only attributes</h1>
+
+  <pre><code>package Person;
+use Moose;
+
+has first_name =&gt; ( <span class="highlight">is =&gt; 'ro'</span> );
+
+my $person =
+    Person-&gt;new( first_name =&gt; 'Dave' );
+
+$person-&gt;first_name('Stevan');
+print $person-&gt;first_name; # Dave</code></pre>
+
+</div>
+
+<div class="slide">
+  <h1>There is More to Come</h1>
+
+  <ul>
+    <li>Attributes have a <em>lot</em> of features</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Cleaning Up Moose Droppings</h1>
+
+  <pre><code>package Person;
+use Moose;
+
+# true
+Person->can('extends');</code></pre>
+
+  <ul>
+    <li>Not very hygienic</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Cleaning Up Moose Droppings</h1>
+
+  <pre><code>package Person;
+use Moose;
+
+...
+
+no Moose;
+
+# false
+Person->can('extends');</code></pre>
+</div>
+
+<div class="slide">
+  <h1>No Moose</h1>
+
+  <ul>
+    <li><code>no Moose</code> at the end of a package is a best practice</li>
+    <li>Just do it</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Immutability</h1>
+
+  <ul>
+    <li><span style="font-family: URW Chancery L; font-size: 140%">Stevan's Incantation of Fleet-Footedness</span></li>
+  </ul>
+
+  <pre><code>package Person;
+use Moose;
+
+<span class="highlight">__PACKAGE__->meta->make_immutable;</span></code></pre>
+</div>
+
+<div class="slide">
+  <h1>What <code>make_immutable</code> does</h1>
+
+  <ul>
+    <li>Magic</li>
+    <li>Uses <code>eval</code> to "inline" a constructor</li>
+    <li>Memoizes a lot of meta-information</li>
+    <li>Makes loading your class slower</li>
+    <li>Makes object creation <em>much</em> faster</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>When to Immutabilize?</h1>
+
+  <ul>
+    <li><em>Almost</em> always</li>
+    <li>Startup time vs execution time</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Classes Summary</h1>
+
+  <ul>
+    <li><code>use Moose</code></li>
+    <li><code>Class-&gt;meta</code></li>
+    <li><code>Moose::Object</code> base class</li>
+    <li><code>extends</code>, <code>overrides</code>, and <code>super</code></li>
+    <li>Simple attributes: <code>has</code>, <code>is&nbsp;=&gt;&nbsp;'ro'</code>, &amp; <code>is&nbsp;=&gt;&nbsp;'rw'</code></li>
+    <li><code>no Moose</code></li>
+    <li><code>__PACKAGE__-&gt;meta-&gt;make_immutable</code></li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Questions?</h1>
+</div>  
+
+<div class="slide">
+  <h1>Exercises</h1>
+
+  <pre># cd exercises
+$ perl bin/prove -lv t/00-prereq.t
+
+Missing anything? Install it. (see tarballs/)
+
+# perl bin/prove -lv t/01-classes.t
+
+Iterate til this passes all its tests</pre>
+</div>
+
+<div class="slide fake-slide0">
+  <h1>Part 2: Roles</h1>
+</div>
+
+<div class="slide">
+  <h1>Just What Is a Role?</h1>
+
+  <ul>
+    <li>Mixin? Interface? Trait?</li>
+    <li>Yes ... and more!</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Roles Can Have State <strong>and</strong> Behavior</h1>
+
+  <pre><code>package HasPermissions;
+use Moose::Role;
+
+<span class="current incremental"># state
+has access_level =&gt; ( is =&gt; 'rw' );</span>
+
+<span class="incremental"># behavior
+sub can_access {
+    my $self     = shift;
+    my $required = shift;
+
+    return $self-&gt;access_level &gt;= $required;
+}</span></code></pre>
+
+</div>
+
+<div class="slide">
+  <h1>Roles Can Define Interfaces</h1>
+
+  <pre><code>package Printable;
+use Moose::Role;
+
+requires 'as_string';</code></pre>
+</div>
+
+<div class="slide">
+  <h1>Roles Can Do All Three</h1>
+
+  <pre><code>package Printable;
+use Moose::Role;
+
+requires 'as_string';
+
+has has_been_printed =&gt; ( is =&gt; 'rw'  );
+
+sub print {
+    my $self = shift;
+    print $self-&gt;as_string;
+    $self-&gt;has_been_printed(1);
+}</code></pre>
+</div>
+
+<div class="slide">
+  <h1>Classes Consume Roles</h1>
+
+  <pre><code>package Person;
+use Moose;
+
+with 'HasPermissions';</code></pre>
+</div>
+
+<div class="slide">
+  <h1>Classes Consume Roles</h1>
+
+<pre><code>my $person = Person-&gt;new(
+    first_name => 'Kenichi',
+    last_name => 'Asai',
+    access_level =&gt; 42,
+);
+
+print $person-&gt;full_name
+    . ' has '
+    . $person-&gt;can_access(42)
+        ? 'great power'
+        : 'little power';</code></pre>
+</div>
+
+<div class="slide">
+  <h1>Roles in Practice</h1>
+
+  <ul>
+    <li>Consuming a role =~ inlining the role</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>In Other Words ...</h1>
+
+<pre><code>package Person;
+use Moose;
+
+<span class="highlight">with 'Printable';</span></code></pre>
+</div>
+
+<div class="slide">
+  <h1>In Other Words ...</h1>
+
+<pre><code>package Person;
+use Moose;
+
+<span class="delete">with 'Printable';</span>
+
+<span class="highlight">has has_been_printed =&gt; ( is =&gt; 'rw'  );
+
+sub print {
+    my $self = shift;
+    print $self-&gt;as_string;
+    $self-&gt;has_been_printed(1);
+}</span></code></pre>
+</div>
+
+<div class="slide">
+  <h1>Except</h1>
+
+  <ul>
+    <li>Role consumption is introspectable</li>
+  </ul>
+
+  <pre><code>if ( Person-&gt;does('Printable') ) { ... }
+
+# or ...
+
+if ( Person-&gt;meta-&gt;does('Printable') ) { ... }</code></pre>
+
+</div>
+
+<div class="slide">
+  <h1>These Names Are the Same</h1>
+
+  <ul>
+    <li>What if a role and class define the same method?</li>
+    <li>A class's <em>local</em> methods win over the role's</li>
+    <li>The role's methods win over the class's <em>inherited</em> methods</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Conflicts Between Roles</h1>
+
+  <ul>
+    <li>Two roles with a method of the same name</li>
+    <li>Generates a compile-time error when consumed by a class</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Conflict Example</h1>
+
+  <pre><code>package IsFragile;
+use Moose::Role;
+
+sub break { ... }
+
+package CanBreakdance;
+use Moose::Role;
+
+sub break { ... }</code></pre>
+</div>
+
+<div class="slide">
+  <h1>Conflict Example</h1>
+
+  <pre><code>package FragileDancer;
+use Moose;
+
+<span class="highlight">with 'IsFragile', 'CanBreakdance';</span></code></pre>
+
+  <ul>
+    <li>Only one <code>with</code>!</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Conflict Resolution</h1>
+
+  <ul>
+    <li>The consuming class must resolve the conflict by implementing th emethod</li>
+    <li>Can use some combination of method exclusion and aliasing</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Method Aliasing</h1>
+
+  <pre><code>package FragileDancer;
+use Moose;
+
+<span class="highlight">with 'IsFragile' =>
+         { alias =>
+               { break => 'break_bone' } },
+     'CanBreakdance' =>
+         { alias =>
+               { break => 'break_it_down' } };</span></code></pre>
+
+  <ul>
+    <li>Renames the roles' methods</li>
+    <li>Still conflicts, need to <code>exclude</code> as well</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Method Exclusion</h1>
+
+  <pre><code>package FragileDancer;
+use Moose;
+
+<span class="highlight">with 'IsFragile' =>
+         { alias =>
+               { break => 'break_bone' },
+           exclude => 'break' },
+     'CanBreakdance' =>
+         { alias =>
+               { break => 'break_dance' },
+           exclude => 'break' };</span></code></pre>
+</div>
+
+<div class="slide">
+  <h1>And then ...</h1>
+
+  <pre><code>package FragileDancer;
+use Moose;
+
+sub break {
+    my $self = shift;
+
+    $self->break_dance;
+    if ( rand(1) &lt; 0.5 ) {
+        $self->break_bone;
+    }
+}</code></pre>
+</div>
+
+<div class="slide">
+  <h1>Still Full of Fail</h1>
+
+  <ul>
+    <li>Roles are also about semantics!</li>
+    <li>We've fulfilled the letter and lost the spirit</li>
+    <li>Roles have a <em>meaning</em></li>
+    <li>Think twice before blindly aliasing and excluding methods!</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Hot Role-on-Role Action</h1>
+
+  <pre><code>package Comparable;
+use Moose::Role;
+
+requires 'compare';</code></pre>
+</div>
+
+<div class="slide">
+  <h1>Hot Role-on-Role Action</h1>
+
+  <pre><code>package TestsEquality;
+use Moose::Role;
+
+with 'Comparable';
+
+sub is_equal {
+    my $self = shift;
+    return $self->compare(@_) == 0;
+}</code></pre>
+</div>
+
+<div class="slide">
+  <h1>And then ...</h1>
+
+  <pre><code>package Integer;
+use Moose;
+
+with 'TestsEquality';
+
+# Satisfies the Comparable role
+sub compare { ... }
+
+Integer->does('TestsEquality'); # true
+Integer->does('Comparable'); # also true!</code></pre>
+</div>
+
+<div class="slide">
+  <h1>Name Conflicts Between Roles</h1>
+
+  <pre><code>package HasSubProcess;
+use Moose::Role;
+
+<span class="highlight">sub execute { ... }</span>
+
+package Killer;
+use Moose::Role;
+
+with 'HasSubProcess';
+
+<span class="highlight">sub execute { ... }</span></code></pre>
+</div>
+
+<div class="slide">
+  <h1>Delayed Conflict</h1>
+
+  <pre><code>package StateOfTexas;
+with 'Killer';</code></pre>
+
+  <ul>
+    <li><code>StateOfTexas</code> must implement its own <code>execute</code></li>
+    <li>But loading the <code>Killer</code> role by itself does not cause an error</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Roles as Interfaces</h1>
+
+  <ul>
+    <li>Roles can <code>require</code> methods of their consumers</li>
+    <li>Compile-time checks</li>
+    <li>Method must exist when the role is consumed</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>The Attribute Gotcha</h1>
+
+<pre><code>package HasSize;
+use Moose::Role;
+
+<span class="current incremental">requires 'size';</span>
+
+package Shirt;
+use Moose;
+
+<span class="incremental">with 'HasSize';
+
+has size => ( is => 'ro' );</span></code></pre>
+</div>
+
+<div class="slide">
+  <h1>The Attribute Gotcha Workaround</h1>
+
+  <pre><code>package HasSize;
+use Moose::Role;
+
+requires 'size';
+
+package Shirt;
+use Moose;
+
+has size => ( is => 'ro' );
+
+with 'HasSize';</code></pre>
+</div>
+
+<div class="slide">
+  <h1>Compile-time Is a Lie</h1>
+
+  <ul>
+    <li>Really, it's <em>package load</em> time</li>
+    <li>That's run-time, but before the "real" run-time</li>
+    <li>Moose does not rewire Perl, it's just sugar!</li>
+    <li>(but <code>MooseX::Declare</code> <em>does</em> rewire Perl)</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Enforcing Roles</h1>
+
+  <pre><code>package Comparison;
+use Moose;
+
+has [ 'left', 'right' ] => (
+    is   => 'ro',
+    <span class="highlight">does => 'Comparable',</span>
+);
+</code></pre>
+
+  <ul>
+    <li>A sneak peek at type constraints</li>
+  </ul>
+</div>
+
+
+<div class="slide">
+  <h1>Roles Can Be Applied to Objects</h1>
+
+  <pre><code>use Moose::Util qw( apply_all_roles );
+
+my $fragile_person = Person->new( ... );
+apply_all_roles( $fragile_person, 'IsFragile' );</code></pre>
+
+  <ul>
+    <li>Does not change the <code>Person</code> class</li>
+    <li>Works with non-Moose classes, great for monkey-patching!</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Roles Are Dirty Too</h1>
+
+  <ul>
+    <li>Once again, clean up those Moose droppings</li>
+  </ul>
+
+  <pre><code>package Comparable;
+use Moose::Role;
+
+requires 'compare';
+
+<span class="highlight">no Moose::Role;</span></code></pre>
+
+  <ul>
+    <li>But roles cannot be made immutable</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>The Zen of Roles</h1>
+
+  <ul>
+    <li>Roles represent discrete units of ...
+      <ul>
+        <li>state</li>
+        <li>behavior</li>
+        <li>interface</li>
+      </ul>
+    </li>
+    <li>Roles are shareable between unrelated classes</li>
+    <li>Roles are what a class <em>does</em>, not what it <em>is</em></li>
+    <li>Roles <em>add</em> functionality, inheritance <em>specializes</em></li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Abstract Examples</h1>
+
+  <ul>
+    <li>Human <em>@ISA</em> Animal</li>
+    <li>Human <em>does</em> Toolmaker (as <em>does</em> Chimpanzee)</li>
+    <li>Car <em>@ISA</em> Vehicle</li>
+    <li>Car <em>does</em> HasEngine</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Real Examples</h1>
+
+  <ul>
+    <li>Objects representing SQL database components and queries
+      <ul>
+        <li>Schema, Table, Column, ColumnAlias</li>
+        <li>Select, Insert, Update, Delete</li>
+      </ul>
+    </li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Real Examples</h1>
+
+  <ul>
+    <li>Column and ColumnAlias both <em>do</em> ColumnLike</li>
+    <li>ColumnLike things can be used in certain parts of queries</li>
+    <li>All queries <em>do</em> HasWhereClause</li>
+    <li>Select <em>does</em> Comparable and Selectable (for subselects)</li>
+    <li>A where clause requires its components to <em>do</em> Comparable</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Roles Summary</h1>
+
+  <ul>
+    <li>Roles can define an interface with <code>requires</code></li>
+    <li>Roles can have state (attributes) and behavior (methods)</li>
+    <li>Roles can mix interface, state, &amp; behavior</li>
+    <li>Roles are composed (flattened) into classes</li>
+    <li>Roles can do other roles</li>
+    <li>Roles can be used as a type in APIs (must do Comparable)</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Questions?</h1>
+</div>  
+
+<div class="slide">
+  <h1>Exercises</h1>
+
+  <pre># cd exercises
+# perl bin/prove -lv t/02-roles.t
+
+Iterate til this passes all its tests</pre>
+</div>
+
+<div class="slide fake-slide0">
+  <h1>Part 3: Basic Attributes</h1>
+</div>
+
+<div class="slide">
+  <h1>Attributes Are Huge</h1>
+
+  <ul>
+    <li>Moose's biggest feature</li>
+    <li>The target of <em>many</em> MooseX modules</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Quick Review</h1>
+
+  <ul>
+    <li>Declared with <code>has</code></li>
+    <li>Read-only or read-write</li>
+  </ul>
+
+  <pre><code>package Shirt;
+use Moose;
+
+has 'color'     =&gt; ( is =&gt; 'ro' );
+has 'is_ripped' =&gt; ( is =&gt; 'rw' );</code></pre>
+</div>
+
+<div class="slide">
+  <h1>Required-ness</h1>
+
+  <ul>
+    <li>Required means "must be passed to the constructor"</li>
+    <li>But can be <code>undef</code></li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Required-ness</h1>
+
+  <pre><code>package Person;
+use Moose;
+
+has first_name =&gt; (
+    is       =&gt; 'ro',
+    <span class="current incremental">required =&gt; 1,</span>
+);
+
+<span class="incremental">Person->new( first_name =&gt; undef ); # ok
+Person->new(); # kaboom</span></code></pre>
+</div>
+
+<div class="slide">
+  <h1>Default and Builder</h1>
+
+  <ul>
+    <li>Attributes can have defaults</li>
+    <li>Simple non-referecne scalars (number, string)</li>
+    <li>Subroutine reference</li>
+    <li>A builder method</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Default</h1>
+
+  <ul>
+    <li>Can be a non-reference scalar (including <code>undef</code>)</li>
+  </ul>
+
+  <pre><code>package Person;
+use Moose;
+
+has bank =&gt; (
+    is      =&gt; 'rw',
+    default =&gt; 'Spire FCU',
+);</code></pre>
+</div>
+
+<div class="slide">
+  <h1>Default</h1>
+
+  <ul>
+    <li>Can be a subroutine reference</li>
+  </ul>
+
+  <pre><code>package Person;
+use Moose;
+
+has bank =&gt; (
+    is      =&gt; 'rw',
+    default =&gt;
+        sub { Bank-&gt;new(
+                  name =&gt; 'Spire FCU' ) },
+);</code></pre>
+</div>
+
+<div class="slide">
+  <h1>Default as a Subroutine Reference</h1>
+
+  <ul>
+    <li>Called as a method on the object</li>
+    <li>Called anew for each object</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Why No Other Reference Types?</h1>
+
+  <pre><code>package Person;
+use Moose;
+
+has bank =&gt; (
+    is      =&gt; 'rw',
+    <span class="wrong">default =&gt; Bank-&gt;new(
+                   name =&gt; 'Spire FCU' ),</span>
+);</code></pre>
+
+  <ul>
+    <li>Now <strong>every</strong> person shares the <strong>same</strong> Bank object!</li>
+  </ul>
+</div>
+
+<div class="slide">
+     <h1>Defaulting to an Empty Reference</h1>
+
+  <pre><code>package Person;
+use Moose;
+
+has packages =&gt; (
+    is      =&gt; 'rw',
+    default =&gt; <span class="highlight">sub { [] }</span>,
+);</code></pre>
+</div>
+
+<div class="slide">
+  <h1>What if I Want to Share?</h1>
+
+  <pre><code>package Person;
+use Moose;
+
+my $highlander_bank =
+    Bank-&gt;new( name =&gt; 'Spire FCU' );
+
+has bank =&gt; (
+    is      =&gt; 'rw',
+    default =&gt; sub { $highlander_bank },
+);</code></pre>
+</div>
+
+<div class="slide">
+  <h1>Builder</h1>
+
+  <ul>
+    <li>A method <em>name</em> which returns the default</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Builder</h1>
+
+  <pre><code>package Person;
+use Moose;
+
+has bank =&gt; (
+    is      =&gt; 'rw',
+    builder =&gt; '_build_bank',
+);
+
+sub _build_bank {
+    my $self = shift;
+    return Bank-&gt;new( name => 'Spire FCU' );
+}</code></pre>
+</div>
+
+<div class="slide">
+  <h1>Default vs Builder</h1>
+
+  <ul>
+    <li>Use default for simple scalars</li>
+    <li>Use default to return empty references</li>
+    <li>Use default for <em>very</em> trivial subroutine references</li>
+    <li>Use builder for everything else</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Builder Bonuses</h1>
+
+  <ul>
+    <li>Can be overridden and method modified, because it's called by <em>name</em></li>
+    <li>Roles can require a builder</li>
+  </ul>
+</div>
+      
+<div class="slide">
+  <h1>Role Requires Builder</h1>
+
+  <pre><code>package HasBank;
+use Moose::Role;
+
+requires '_build_bank';
+
+has bank =&gt; (
+    is      =&gt; 'ro',
+    builder =&gt; '_build_bank',
+);</code></pre>
+</div>
+
+<div class="slide">
+  <h1>Lazy, Good for Nothing Attributes</h1>
+
+  <ul>
+    <li>Normally, defaults are generated during object construction</li>
+    <li>This can be expensive</li>
+    <li>We want to default to <code>$self-&gt;size * 2</code>, but attribute initialization order is unpredictable</li>
+    <li>Use lazy attributes!</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>The Power of Dynamic Defaults</h1>
+
+  <pre><code>package Person;
+use Moose;
+
+has shoe_size =&gt; (
+    is =&gt; 'ro',
+);</code></pre>
+</div>
+
+<div class="slide">
+  <h1>The Power of Dynamic Defaults</h1>
+
+  <pre><code>has shoes =&gt; (
+    is      =&gt; 'ro',
+    <span class="highlight">lazy    =&gt; 1,</span>
+    builder => '_build_shoes',
+);
+
+sub _build_shoes {
+    my $self = shift;
+
+    return Shoes-&gt;new(
+        size =&gt; <span class="highlight">$_[0]-&gt;shoe_size</span> );
+}</code></pre>
+</div>
+
+<div class="slide">
+  <h1>Lazy is Good</h1>
+
+  <ul>
+    <li>Lazy defaults are executed when the attribute is read</li>
+    <li>Can see other object attributes</li>
+    <li>Still need to watch out for circular laziness</li>
+  </ul>
+</div>    
+
+<div class="slide">
+  <h1>Clearer and Predicate</h1>
+
+  <ul>
+    <li>Attributes can have a value, including <code>undef</code>, or not</li>
+    <li>Can clear the value with a clearer method</li>
+    <li>Can check for the existence of a value with a predicate method</li>
+    <li>By default, these methods are not created</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Clearer and Predicate</h1>
+
+  <pre><code>package Person;
+use Moose;
+
+has account =&gt; (
+    is        =&gt; 'ro',
+    lazy      =&gt; 1,
+    builder   =&gt; '_build_account',
+    <span class="highlight">clearer   =&gt; '_clear_account',
+    predicate =&gt; 'has_account',</span>
+);</code></pre>
+</div>
+
+<div class="slide">
+  <h1>Clearer and Lazy Defaults</h1>
+
+  <ul>
+    <li>Lazy defaults are good for computed attributes</li>
+    <li>Clear the attribute when the source data changes</li>
+    <li>Recalculated at next access</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Renaming constructor arguments</h1>
+
+  <ul>
+    <li>By default, constructor names = attribute names</li>
+    <li>Use <code>init_arg</code> to change this</li>
+    <li>Set <code>init_arg =&gt; undef</code> to make it unconstructable</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Some <code>init_arg</code> examples</h1>
+
+  <pre><code>package Person;
+use Moose;
+
+has shoe_size => (
+    is       =&gt; 'ro',
+    <span class="highlight">init_arg =&gt; 'foot_size',</span>
+);
+
+Person->new( <span class="wrong">shoe_size =&gt; 13</span> );
+
+my $person =
+    Person->new( <span class="right">foot_size =&gt; 13</span> );
+print $person->shoe_size;</code></pre>
+</div>
+
+<div class="slide">
+  <h1>Some <code>init_arg</code> examples</h1>
+
+<pre><code>package Person;
+use Moose;
+
+has shoes => (
+    is       =&gt; 'ro',
+    <span class="highlight">init_arg =&gt; undef,</span>
+);
+
+Person->new( <span class="wrong">shoes =&gt; Shoes-&gt;new</span> );</code></pre>
+</div>
+
+<div class="slide">
+  <h1>Why Set <code>init_arg =&gt; undef</code>?</h1>
+
+  <ul>
+    <li>Use this with a lazy default for attributes-as-cache</li>
+    <li>Compute the value as needed</li>
+    <li>Ensure that it is always generated correctly (not set by constructor)</li>
+    <li>Use triggers or method modifiers (coming soon) to clear the value</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Attribute Inheritance</h1>
+
+  <ul>
+    <li>By default, subclasses inherit attribute as-is</li>
+    <li>Can change some attribute parameters in subclasses
+      <ul>
+        <li>default</li>
+        <li>builder</li>
+        <li>required</li>
+        <li>lazy</li>
+        <li>others we've not yet covered</li>
+      </ul>
+    </li>
+  </ul>
+</div>   
+
+<div class="slide">
+  <h1>Attribute Inheritance Example</h1>
+
+  <pre><code>package Employee;
+use Moose;
+
+extends 'Person';
+
+has '<span class="highlight">+first_name</span>' =&gt; (
+    default =&gt; 'Joe',
+);</code></pre>
+</div>
+
+<div class="slide">
+  <h1>Attribute Inheritance Warning</h1>
+
+  <ul>
+    <li>An attribute is a contract about a class's API</li>
+    <li>Don't break that contract in a subclass</li>
+    <li>Especially important in the context of types</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Changing Accessor Names</h1>
+
+  <pre><code>package Person;
+use Moose;
+
+has first_name =&gt; (
+    <span class="highlight">reader</span> =&gt; 'first_name',
+    <span class="highlight">writer</span> =&gt; 'first_name',
+);</code></pre>
+
+  <ul>
+    <li>The long-hand version of <code>is =&gt; 'rw'</code></li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Changing Accessor Names</h1>
+
+  <pre><code>package Person;
+use Moose;
+
+has first_name =&gt; (
+    <span class="highlight">reader</span> =&gt; 'first_name',
+    <span class="highlight">writer</span> =&gt; undef,
+);</code></pre>
+
+  <ul>
+    <li>The long-hand version of <code>is =&gt; 'ro'</code></li>
+  </ul>
+</div>
+
+
+<div class="slide">
+  <h1>Changing Accessor Names</h1>
+
+  <pre><code>package Person;
+use Moose;
+
+has first_name =&gt; (
+    <span class="highlight">reader</span> =&gt; 'get_first_name',
+    <span class="highlight">writer</span> =&gt; 'set_first_name,
+);</code></pre>
+</div>
+
+<div class="slide">
+  <h1>Changing Accessor Names</h1>
+
+  <pre><code>package Person;
+use Moose;
+
+has first_name =&gt; (
+    <span class="highlight">is</span>     =&gt; 'rw',
+    <span class="highlight">writer</span> =&gt; '_first_name',
+);</code></pre>
+
+  <ul>
+    <li>Can also mix-and-match</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>ETOOMUCHTYPING</h1>
+
+  <ul>
+    <li><code>MooseX::FollowPBP</code><br /><code>get_foo</code> and <code>set_foo</code></li>
+    <li><code>MooseX::SemiAffordanceAccessor</code><br /><code>foo</code> and <code>set_foo</code></li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>ETOOMUCHTYPING</h1>
+
+  <pre><code>package Person;
+use Moose;
+<span class="highlight">use MooseX::SemiAffordanceAccessor;</span>
+
+has first_name =&gt; (
+    is =&gt; 'rw',
+);</code></pre>
+
+  <ul>
+    <li>Creates <code>first_name</code> and <code>set_first_name</code></li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Basic Attributes Summary</h1>
+
+  <ul>
+    <li>Attributes can be <code>required</code></li>
+    <li>Attributes can have a <code>default</code> or <code>builder</code></li>
+    <li>Attributes with a default or builder can be <code>lazy</code></li>
+    <li>Attributes can have a <code>clearer</code> and/or <code>predicate</code></li>
+    <li>An attribute's constructor name can be changed with <code>init_arg</code></li>
+    <li>A subclass can alter its parents' attributes</li>
+    <li>Attribute accessor names can be changed</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Questions?</h1>
+</div>  
+
+<div class="slide">
+  <h1>Exercises</h1>
+
+  <pre># cd exercises
+# perl bin/prove -lv t/03-basic-attributes.t
+
+Iterate til this passes all its tests</pre>
+</div>
+
+<div class="slide fake-slide0">
+  <h1>Part 4: Method Modifiers</h1>
+</div>
+
+<div class="slide">
+  <h1>What is a Method Modifier</h1>
+
+  <ul>
+    <li>Apply to an existing method</li>
+    <li>... from a parent class, the current class, or a role</li>
+    <li>Roles can provide modifiers that are applied at composition time</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>What is a Method Modifier</h1>
+
+  <ul>
+    <li>"Iinject" behavior</li>
+    <li>Add behavior to generated methods (accessors, delegations)</li>
+    <li>Provide roles which modify existing behavior</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Before and After</h1>
+
+  <ul>
+    <li>Simplest modifiers - <code>before</code> and <code>after</code></li>
+    <li>Guess when they run!</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Uses for <code>before</code></h1>
+
+  <ul>
+    <li>As a pre-call check</li>
+  </ul>
+
+  <pre><code>package Person;
+use Moose;
+
+before work =&gt; sub {
+    my $self = shift;
+    die 'I have no job!'
+        unless $self-&gt;has_title;
+};</code></pre>
+</div>    
+
+<div class="slide">
+  <h1>Uses for <code>before</code></h1>
+
+  <ul>
+    <li>Logging/Debugging</li>
+  </ul>
+
+  <pre><code>package Person;
+use Moose;
+
+before work =&gt; sub {
+    my $self = shift;
+    return unless $DEBUG;
+
+    warn "Called work on ", $self->full_name,
+         "with the arguments: [@_]\n";
+};</code></pre>
+</div>    
+
+<div class="slide">
+  <h1>Uses for <code>after</code></h1>
+
+  <ul>
+    <li>Also works for logging/debugging</li>
+    <li>Post-X side-effects (recording audit info)</li>
+  </ul>
+
+  <pre><code>package Person;
+use Moose;
+
+after work =&gt; sub {
+    my $self = shift;
+    $self-&gt;work_count(
+        $self-&gt;work_count + 1 );
+};</code></pre>
+</div>
+
+<div class="slide">
+  <h1>Other Uses</h1>
+
+  <ul>
+    <li>Modifiers are useful for adding behavior to generated methods</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Other Uses Example</h1>
+
+  <pre><code>has password =&gt; (
+     is      =&gt; 'rw',
+     clearer =&gt; 'clear_password',
+);
+
+has hashed_password =&gt; (
+     is      =&gt; 'ro',
+     builder =&gt; '_build_hashed_password',
+     clearer =&gt; '_clear_hashed_password',
+);
+
+after clear_password =&gt; sub {
+    my $self = shift;
+    $self-&gt;_clear_hashed_password;
+};</code></pre>
+</div>
+
+<div class="slide">
+  <h1><code>before</code> and <code>after</code> Limitations</h1>
+
+  <ul>
+    <li>Cannot alter method parameters</li>
+    <li>Cannot alter return value</li>
+    <li>But <strong>can</strong> throw an exception</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>The <code>around</code> Modifier</h1>
+
+  <ul>
+    <li>The big gun</li>
+    <li>Can alter parameters <strong>and/or</strong> return values</li>
+    <li>Can skip calling the wrapped method entirely</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>The power of <code>around</code></h1>
+
+  <pre><code>around insert =&gt; sub {
+    my $orig = shift;
+    my $self = shift;
+
+    $self-&gt;_validate_insert(@_);
+
+    my $new_user =
+        $self-&gt;$orig(
+            $self-&gt;_munge_insert(@_) );
+
+    $new_user->_assign_uri;
+
+    return $new_user;
+};</code></pre>
+</div>
+
+<div class="slide">
+  <h1>Modifier Order</h1>
+
+  <ul>
+    <li>Before runs order from last to first</li>
+    <li>After runs in order from first to last</li>
+    <li>Around runs in order from last to first</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Modifier Order Illustrated</h1>
+
+<pre>
+<span class="current incremental">before 2
+ before 1</span>
+  <span class="incremental">around 2
+   around 1</span>
+    <span class="incremental">wrapped method</span>
+   <span class="incremental">around 1
+  around 2</span>
+ <span class="incremental">after 1
+after 2</span>
+</pre>
+</div>
+
+<div class="slide">
+  <h1>Modifiers in Roles</h1>
+
+  <ul>
+    <li>Roles can use these modifiers</li>
+    <li>Very powerful!</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Modifiers in Roles</h1>
+
+  <pre><code>package IsUnreliable;
+use Moose::Role;
+
+<span class="highlight">requires 'run';
+
+around run</span> =&gt; sub {
+    my $orig = shift;
+    my $self = shift;
+
+    return if rand(1) &lt; 0.5;
+
+    return $self-&gt;$orig(@_);
+};</code></pre>
+</div>
+
+<div class="slide">
+  <h1>Augment and Inner</h1>
+
+  <ul>
+    <li>Inverted <code>super</code></li>
+    <li>From least- to most-specific</li>
+    <li>Grandparent to parent to child</li>
+    <li>Not allowed in roles</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Augment and Inner</h1>
+
+  <pre><code>package Document;
+
+sub xml { '&lt;doc&gt;' . <span class="highlight">inner()</span> . '&lt;/doc&gt;' }
+
+package Report;
+extends 'Document';
+
+<span class="highlight">augment xml</span> =&gt; { title() . <span class="highlight">inner()</span> . summary() };
+
+package TPSReport;
+extends 'Report';
+
+<span class="highlight">augment xml</span> =&gt; { tps_xml() . <span class="highlight">inner()</span> };</code></pre>
+</div>
+
+<div class="slide">
+  <h1>Augment and Inner</h1>
+
+  <ul>
+    <li>When we call <code>$tps-&gt;xml</code> ...
+      <ul>
+        <li><code>Document-&gt;xml</code></li>
+        <li><code>Report-&gt;xml</code></li>
+        <li><code>TPSReport-&gt;xml</code></li>
+      </ul>
+    </li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Augment and Inner Usage</h1>
+
+  <ul>
+    <li>Call <code>inner()</code> to "fill in the blank"</li>
+    <li>Requires designing for subclassing</li>
+    <li>Call <code>inner()</code> in the terminal class, just in case</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Method Modifiers Summary</h1>
+
+  <ul>
+    <li>Use <code>before</code> and <code>after</code> for ...
+      <ul>
+        <li>logging</li>
+        <li>pre- or post-validation</li>
+        <li>to add behavior to generated methods</li>
+      </ul>
+    </li>
+    <li>These two modifiers cannot change parameters or return values</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Method Modifiers Summary</h1>
+
+  <ul>
+    <li>Use <code>around</code> to ...
+      <ul>
+        <li>alter parameters passed to the original method</li>
+        <li>alter the return value of the original method</li>
+        <li>not call the original method at all (or call a <em>different</em> method)</li>
+      </ul>
+    </li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Method Modifiers Summary</h1>
+
+  <ul>
+    <li>When using modifiers in a role, require the modified method</li>
+    <li>Use <code>augment</code> and <code>inner</code> to invert the normal subclassing flow ...
+      <ul>
+        <li>Least- to most-specific (parents to children)</li>
+        <li>Build in "insertability" (stick more stuff in the "middle")</li>
+      </ul>
+    </li>
+    <li>Always call <code>inner</code> in the most specific subclass to allow for future extension</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Questions?</h1>
+</div>  
+
+<div class="slide">
+  <h1>Exercises</h1>
+
+  <pre># cd exercises
+# perl bin/prove -lv t/04-method-modifiers.t
+
+Iterate til this passes all its tests</pre>
+</div>
+
+<div class="slide fake-slide0">
+  <h1>Part 5: Types</h1>
+</div>
+
+<div class="slide fake-slide0">
+  <h1>Part 6: Advanced Attributes</h1>
+</div>
+
+<div class="slide">
+  <h1>Weak References</h1>
+
+  <ul>
+    <li>A weak reference lets you avoid circular references</li>
+    <li>Weak references do not increase the reference count</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Circular Reference Illustrated</h1>
+
+  <pre><code>my $foo = {};
+my $bar = { foo =&gt; $foo };
+$foo-&gt;{bar} = $bar;</code></pre>
+
+  <ul>
+    <li>Neither <code>$foo</code> nor <code>$bar</code> go out of scope<br />
+        (until the program exits)</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Weakening Circular References</h1>
+
+  <pre><code>use Scalar::Util qw( weaken );
+
+my $foo = {};
+my $bar = { foo =&gt; $foo };
+$foo-&gt;{bar} = $bar;
+weaken $foo-&gt;{bar}</code></pre>
+
+  <ul>
+    <li>When <code>$bar</code> goes out of scope, <code>$foo-&gt;{bar}</code> becomes <code>undef</code></li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Circular References in Attributes</h1>
+
+  <pre><code>package Person;
+use Moose;
+
+has name   =&gt; ( is =&gt; 'ro' );
+has friend =&gt; ( is =&gt; 'rw' );
+
+my $alice = Person-&gt;new( name =&gt; 'Alice' );
+my $bob   = Person-&gt;new( name =&gt; 'Bob' );
+$bob-&gt;friend($alice);
+$alice-&gt;friend($bob);</code></pre>
+</div>
+
+<div class="slide">
+  <h1>The Fix</h1>
+
+  <pre><code>package Person;
+use Moose;
+
+has name   =&gt; ( is =&gt; 'ro' );
+has friend =&gt; ( is =&gt; 'rw', <span class="highlight">weak_ref =&gt; 1</span> );
+
+my $alice = Person-&gt;new( name =&gt; 'Alice' );
+my $bob   = Person-&gt;new( name =&gt; 'Bob' );
+$bob-&gt;friend($alice);
+$alice-&gt;friend($bob);</code></pre>
+</div>
+
+<div class="slide">
+  <h1>Under the Hood</h1>
+
+  <ul>
+    <li>A <code>weak_ref</code> attribute calls <code>weaken</code> ...
+      <ul>
+        <li>during object construction</li>
+        <li>when the attribute is set via a writer</li>
+      </ul>
+    </li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Triggers</h1>
+
+  <ul>
+    <li>A code reference run after an attribute is <em>set</em></li>
+    <li>Like an <code>after</code> modifier, but makes intentions clearer</li>
+  </ul>
+
+  <h2 class="wrong">Gross</h2>
+
+  <pre><code>after salary_level =&gt; {
+    my $self = shift;
+    return unless @_;
+    $self-&gt;clear_salary;
+};</code></pre>
+</div>
+
+<div class="slide">
+  <h1>Use a Trigger Instead</h1>
+
+  <h2 class="right">Cleaner</h2>
+
+  <pre><code>has salary_level =&gt; (
+    is      =&gt; 'rw',
+    trigger =&gt; sub { $_[0]-&gt;clear_salary },
+);</code></pre>
+</div>
+
+<div class="slide">
+  <h1>Delegation</h1>
+
+  <ul>
+    <li>Attributes can be objects</li>
+    <li>Delegation transparently calls methods on those objects</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Delegation Examples</h1>
+
+  <pre><code>package Person;
+
+has lungs =&gt; (
+    is      =&gt; 'ro',
+    isa     => 'Lungs',
+    <span class="highlight">handles =&gt; [ 'inhale', 'exhale' ],</span>
+);</code></pre>
+
+  <ul>
+    <li>Creates <code>$person-&gt;inhale</code> and <code>-&gt;exhale</code> methods</li>
+    <li>Internally calls <code>$person-&gt;lungs-&gt;inhale</code></li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Why Delegation?</h1>
+
+  <ul>
+    <li>Reduce the number of classes exposed</li>
+    <li>Re-arrange class internals -<br />
+        turn a method into an attribute with delegation</li>
+    <li>Provide convenenience methods</li>
+  </ul>
+</div> 
+
+<div class="slide">
+  <h1>Moose's <code>handles</code> Parameter</h1>
+
+  <ul>
+    <li>Accepts many arguments ...
+      <ul>
+        <li>Array reference - list of methods to delegate as-is</li>
+        <li>Hash reference - map of method names</li>
+        <li>Regex - delegates all matching methods</li>
+        <li>Role name - delegates all methods in the role</li>
+        <li>Sub reference - does something complicated ;)</li>
+      </ul>
+    </li>
+  </ul>
+</div>      
+
+<div class="slide">
+  <h1>Array Reference</h1>
+
+  <ul>
+    <li>Takes each method name and creates a simple delegation from the delegating class to the delegatee attribute</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Hash Reference</h1>
+
+  <ul>
+    <li>Mapping of names in the delegating class to the delegatee class</li>
+  </ul>
+
+  <pre><code>package Person;
+use Moose;
+
+has account =&gt; (
+    is      =&gt; 'ro',
+    isa     =&gt; 'BankAccount',
+    <span class="highlight">handles =&gt; {
+        receive_money =&gt; 'deposit',
+        give_money    =&gt; 'withdraw',
+    },</span>
+);</code></pre>
+</div>
+
+<div class="slide">
+  <h1>Hash Reference Detailed</h1>
+
+  <pre><code>    handles =&gt; {
+        receive_money =&gt; 'deposit',
+        give_money    =&gt; 'withdraw',
+    },</code></pre>
+
+  <ul>
+    <li><code>$person-&gt;receive_money</code> = <code>$person-&gt;account-&gt;deposit</code></li>
+    <li><code>$person-&gt;give_money</code> = <code>$person-&gt;account-&gt;withdraw</code></li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Regex</h1>
+
+  <pre><code>package Person;
+use Moose;
+
+has name =&gt; (
+    is      =&gt; 'ro',
+    isa     =&gt; 'Name',
+    handles =&gt; qr/.*/,
+);</code></pre>
+
+  <ul>
+    <li>Creates a delegation for every method in the Name class</li>
+    <li>Excludes <code>meta</code> and methods inherited from <code>Moose::Object</code></li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Role Name</h1>
+
+  <pre><code>package Auditor;
+use Moose::Role;
+
+sub record_change  { ... }
+sub change_history { ... }
+
+package Account;
+use Moose;
+
+has history =&gt; (
+    is      =&gt; 'ro',
+    does    =&gt; 'Auditor',
+    <span class="highlight">handles =&gt; 'Auditor',</span>
+);</code></pre>
+</div>
+
+<div class="slide">
+  <h1>Role Name Detailed</h1>
+
+  <ul>
+    <li>Account gets delegate methods for each method in the <code>Auditor</code> role
+      <ul>
+        <li>record_history</li>
+        <li>change_history</li>
+      </ul>
+    </li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Traits and Metaclasses</h1>
+
+  <ul>
+    <li>The ultimate in customization</li>
+    <li>Per attribute metaclasses</li>
+    <li>Per attribute roles applied to the attribute metaclass</li>
+    <li>Change the meta-level behavior</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Traits and Metaclasses</h1>
+
+  <ul>
+    <li>The default metaclass is <code>Moose::Meta::Attribute</code></li>
+    <li>Controls accessor generation, defaults, delegation, etc.</li>
+    <li>Adding a role to this metaclass (or replacing it) allows for infinite customization</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Traits and Metaclasses</h1>
+
+  <ul>
+    <li>Can add/alter/remove attribute parameter (from <code>has</code>)</li>
+    <li>Can change behavior of created attribute</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Simple Trait Example</h1>
+
+  <pre><code>package Person;
+use Moose;
+use MooseX::LabeledAttributes;
+
+has ssn =&gt; (
+    <span class="highlight">traits =&gt; [ 'Labeled' ],</span>
+    is     =&gt; 'ro',
+    isa    =&gt; 'Str',
+    <span class="highlight">label  =&gt; 'Social Security Number',</span>
+);
+
+print <span class="highlight">Person-&gt;meta
+            -&gt;get_attribute('ssn')-&gt;label;</span></code></pre>
+</div>
+
+<div class="slide">
+  <h1>Simple Metaclass Example</h1>
+
+  <pre><code>package Person;
+use Moose;
+use MooseX::LabeledAttributes;
+
+has ssn =&gt; (
+    <span class="highlight">metaclass =&gt;
+        'MooseX::Meta::Attribute::Labeled',</span>
+    is        =&gt; 'ro',
+    isa       =&gt; 'Str',
+    <span class="highlight">label     =&gt; 'Social Security Number',</span>
+);
+
+print <span class="highlight">Person-&gt;meta
+            -&gt;get_attribute('ssn')-&gt;label;</span></code></pre>
+</div>
+
+<div class="slide">
+  <h1>Traits vs Metaclass</h1>
+
+  <ul>
+    <li>Can apply any mix of traits to an attribute</li>
+    <li>But just one metaclass</li>
+    <li>Traits (aka roles) can cooperate</li>
+    <li>Metaclasses require you to pick just one</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Advanced Attributes Summary</h1>
+
+  <ul>
+    <li>Use <code>weak_ref</code> to avoid circular references</li>
+    <li>Use trigger to do an action post-attribute write</li>
+    <li>Use delegations to hide "internal" objects</li>
+    <li>Traits and metaclasses let you extend Moose's core attribute features</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Questions?</h1>
+</div>  
+
+<div class="slide">
+  <h1>Exercises</h1>
+
+  <pre># cd exercises
+# perl bin/prove -lv t/06-advanced-attributes.t
+
+Iterate til this passes all its tests</pre>
+</div>
+
+<div class="slide fake-slide0">
+  <h1>Part 7: Introspection</h1>
+</div>
+
+<div class="slide fake-slide0">
+  <h1>Part 8: A Tour of MooseX</h1>
+</div>
+
+<div class="slide fake-slide0">
+  <h1>Part 9: Writing Moose Extensions</h1>
+</div>
+
+</div> 
+</body>
+</html>
+
+<!--
+
+Copyright 2009 David Rolsky. All Rights Reserved.
+
+This work is licensed under a Creative Commons Attribution-Share Alike
+3.0 United States License See
+http://creativecommons.org/licenses/by-sa/3.0/us/ for details.
+
+-->
